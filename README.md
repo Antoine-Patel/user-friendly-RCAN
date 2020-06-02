@@ -88,9 +88,9 @@ mainly show the effectiveness of our proposed RCAN against GAN based
 methods.
 
 ## Quantitative Results
-![PSNR_SSIM_BI](/Figs/psnr_bi_1.PNG)
-![PSNR_SSIM_BI](/Figs/psnr_bi_2.PNG)
-![PSNR_SSIM_BI](/Figs/psnr_bi_3.PNG)
+![PSNR_SSIM_BI](/data/figs/psnr_bi_1.PNG)
+![PSNR_SSIM_BI](/data/figs/psnr_bi_2.PNG)
+![PSNR_SSIM_BI](/data/figs/psnr_bi_3.PNG)
 
 Quantitative results with BI degradation model. Best and second best
 results are highlighted and underlined.
