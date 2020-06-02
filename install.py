@@ -25,22 +25,44 @@ envdir = normpath('./rcan-env')
 # 'python3' refers to the 3.x version. On Windows it's usually not the
 # case.
 python = 'python3' if find_executable('python3') is not None else 'python'
+vcmd = f'{python} -m venv {envdir}'
 # Init a python virtual environment if needed.
 if not isfile(normpath(f'{envdir}/pyvenv.cfg')):
-    cmd = f'{python} -m venv {envdir}'
     print(f'seting up the python virtual environment: {cmd}')
-    os.system(cmd)
+    os.system(vcmd)
 
 if not isfile(normpath(f'{envdir}/pyvenv.cfg')):
-    print(f'Failed to create the python virtual environment in {envdir}')
+    print(f'[error] Failed to create the python virtual environment in {envdir}')
     exit(3)
 
-# The python binary for the virtual environment.
-vpython = f'{envdir}/bin/python'
-vpython = vpython if isfile(vpython) else f'{envdir}/bin/python3'
+vpip = None
+vpython = None
+
+# Find a binary inside the virtual environment.
+def get_vbin(binary):
+    candidates = (f'{envdir}/bin/{binary}',
+                  f'{envdir}/bin/{binary}3',
+                  f'{envdir}/Scripts/{binary}',
+                  f'{envdir}/Scripts/{binary}3')
+    return next(normpath(x) for x in candidates
+         if isfile(normpath(x)))
+
 # The pip binary for the virtual environment.
-vpip = f'{envdir}/bin/pip'
-vpip = vpip if isfile(vpip) else f'{envdir}/bin/pip3'
+vpip = get_vbin('pip')
+# The python binary for the virtual environment.
+vpython = get_vbin('python')
+
+# I had pip not being added to the virtual environment on Windows, not
+# sure why. Redoing the venv stuff fix it, again not idea why (don't
+# care).
+if not vpip:
+    os.system(vcmd)
+    vpip = get_vbin('pip')
+
+# If still not found, exit...
+if not vpip:
+    print(f'[error] Failed to find pip in {envdir}')
+    exit(4)
 
 # See https://github.com/scikit-image/scikit-image/issues/4673
 cmd = f'{vpip} install -U pip'
