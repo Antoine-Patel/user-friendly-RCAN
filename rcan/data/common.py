@@ -1,12 +1,7 @@
 import random
 
 import numpy as np
-import skimage.io as sio
-import skimage.color as sc
-import skimage.transform as st
-
 import torch
-from torchvision import transforms
 
 def get_patch(img_in, img_tar, patch_size, scale, multi_scale=False):
     ih, iw = img_in.shape[:2]
@@ -75,7 +70,7 @@ def augment(l, hflip=True, rot=True):
         if hflip: img = img[:, ::-1, :]
         if vflip: img = img[::-1, :, :]
         if rot90: img = img.transpose(1, 0, 2)
-        
+
         return img
 
     return [_augment(_l) for _l in l]
