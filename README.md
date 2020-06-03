@@ -127,7 +127,7 @@ script shows that you have CUDA enabled, remove '--cpu'.
 target='./data/LR/LRBI/Set5/x2/bird_LRBI_x2.png'
 result='/tmp/bird_LRBI_x2_RCAN_x2.png'
 
-python run.py --chop --cpu --scale 2 --outdir='/tmp' "$target"
+python run.py --chop --cpu --scale 2 --outdir /tmp "$target"
 # Display the result.
 display "$result" || xviewer "$result" # Or whatever is your image viewer, you get the idea.
 ```
@@ -275,11 +275,11 @@ python run.py --chop --scale 2 /home/user/me/pictures/bird.png /tmp/baby.png /tm
 
 ```shell
 # Results: ./tmp/bird-RCAN-x2.png, ./tmp/baby-RCAN-x2.png
-python run.py --chop --scale 2 --outdir '/tmp' /home/user/me/pictures/bird.png ./baby.png
+python run.py --chop --scale 2 --outdir /tmp /home/user/me/pictures/bird.png ./baby.png
 
 # To use the current directory (working directory):
 # Results: ./bird-RCAN-x2.png, ./baby-RCAN-x2.png
-python run.py --chop --scale 2 --outdir '.' /home/user/me/pictures/bird.png ./baby.png
+python run.py --chop --scale 2 --outdir "." /home/user/me/pictures/bird.png ./baby.png
 
 ```
 
@@ -287,7 +287,7 @@ python run.py --chop --scale 2 --outdir '.' /home/user/me/pictures/bird.png ./ba
 
 ```shell
 # Eg. upscale by a factor 4. Recommanded values: 2, 3, 4, 8.
-python run.py --chop --scale 4  --outdir '/tmp' /home/user/me/pictures/bird.png
+python run.py --chop --scale 4  --outdir /tmp /home/user/me/pictures/bird.png
 ```
 
 Note: a pre-trained file is automatically choosen according the
@@ -327,7 +327,7 @@ python run.py --chop --scale 2  --pre-trained-file ./data/model/RCAN_BIX4.pt -- 
 ### Example with absolute paths
 
 ```shell
-python ~/workspace/RCAN/run.py --chop --scale 2 --outdir='/tmp' ~/workspace/RCAN/data/LR/LRBI/Set5/x2/bird_LRBI_x2.png
+python ~/workspace/RCAN/run.py --chop --scale 2 --outdir /tmp ~/workspace/RCAN/data/LR/LRBI/Set5/x2/bird_LRBI_x2.png
 ```
 
 # RCAN+
@@ -343,7 +343,7 @@ python run.py --self-ensemble --chop --scale 2  /home/user/me/pictures/bird.png
 # Sample full output
 
 ```shell
-user@user-laptop:~$ python ~/workspace/RCAN/run.py --chop --cpu --scale 2 --outdir='/tmp' ~/workspace/RCAN/data/LR/LRBI/Set5/x2/b*_x2.png
+user@user-laptop:~$ python ~/workspace/RCAN/run.py --chop --cpu --scale 2 --outdir /tmp ~/workspace/RCAN/data/LR/LRBI/Set5/x2/b*_x2.png
 Loading model from /media/user/icybox_02/data/documents/workspace/RCAN/data/model/RCAN_BIX2.pt
 100%|█████████████████████████████████████████████| 3/3 [04:22<00:00, 87.44s/it]
 Saved results:

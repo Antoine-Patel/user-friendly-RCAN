@@ -17,8 +17,8 @@ class Images(data.Dataset):
         self.filelist = []
         for image in args.images:
             try:
-                imageio.imread(image.name)
-                self.filelist.append(image.name)
+                imageio.imread(image)
+                self.filelist.append(image)
             except:
                 pass
 

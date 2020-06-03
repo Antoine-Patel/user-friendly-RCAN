@@ -1,12 +1,14 @@
-import argparse, os
-from inspect import getsourcefile
+import argparse
+from rcan.utility import get_vbin, rootdir
+from os.path import normpath, isfile
+from os import getcwd
 
 
 parser = argparse.ArgumentParser(description='RCAN: Image Super-Resolution Using Very Deep Residual Channel Attention Networks (Yulun Zhang, Kunpeng Li, Kai Li, Lichen Wang, Bineng Zhong, Yun Fu)')
 
 parser.add_argument('--debug', action='store_true',
                     help='Enables debug mode')
-parser.add_argument('images', type=argparse.FileType('r'), nargs='+',
+parser.add_argument('images', type=str, nargs='+',
                     help='The image(s) to upscale')
 # Note: except for 3, the rest of the code expects --scale to be a
 # power of 2, "NotImplementedError" otherwise.
@@ -18,6 +20,8 @@ parser.add_argument('--scale', type=int, default=2,
                     help='super resolution scale / upscaling factor.')
 parser.add_argument('--chop', action='store_true',
                     help='enable memory-efficient forward')
+parser.add_argument('--ignore_invalid_images', action='store_true',
+                    help='Skip invalid images (file not found, unreadable, ...) instead of halting.')
 parser.add_argument('--outdir', type=str,
                     help='An optional directory where all results (upscaled images) will be written. Use "." to save in the current directory. If --outdir is left empty, the upscaled images are saved next to their originals (with an added suffix)')
 
@@ -88,9 +92,8 @@ args = parser.parse_args()
 # Autoload a model in ../data/model according to given --scale if
 # needed.
 if args.pre_trained_file is None:
-    this_dir = os.path.dirname(os.path.abspath(getsourcefile(lambda:0)))
-    args.pre_trained_file = os.path.normpath(
-        f'{this_dir}/../data/model/RCAN_BIX{args.scale}.pt')
+    args.pre_trained_file = normpath(
+        f'{rootdir}/data/model/RCAN_BIX{args.scale}.pt')
 
 # Seems like the original code allowed to upscale by multiple factors
 # in one invocation, but... the same pre-trained file would be used.
@@ -104,6 +107,25 @@ args.scale = [args.scale]
 
 args.model = 'RCAN'
 
+# type=argparse.filetype('r') would cause a serialization error on 
+# Windows, something about multiprocessing. Easier to drop it and 
+# check for invalid files here.
+has_missing = 0
+for f in args.images + [args.pre_trained_file]:
+    if not isfile(f):
+        print(f'File {f} not found / invalid / unreadable.')
+        has_missing += 1
+
+has_missing = has_missing > 0
+
+if not args.ignore_invalid_images and has_missing:
+    print(f'--ignore_invalid_images is False and invalid file(s): exiting.')
+    exit(1)
+
+args.outdir = args.outdir.replace("'", "")
+if args.outdir == '.':
+    args.outdir = getcwd()
+    
 for arg in vars(args):
     if vars(args)[arg] == 'True':
         vars(args)[arg] = True
