@@ -114,25 +114,26 @@ if not checkfile_ok(args.pre_trained_file):
     exit(3)
 
 bad_files = [i for i in args.images if not checkfile_ok(i)]
-print('Some files were not found or unreadable:')
-for i in bad_files:
-    print(i)
-print('')
+if len(bad_files):
+    print('Some files were not found or unreadable:')
+    for i in bad_files:
+        print(i)
+    print('')
 
-if args.ignore_invalid_files:
-    args.images[:] = [i for i in args.images if i not in bad_files]
-else:
-    # type=argparse.filetype('r') would cause a serialization error on
-    # Windows, something about multiprocessing. Easier to drop it and
-    # check for invalid files here.
-    print('--ignore_invalid_files is False: exiting.')
-    exit(1)
+    if args.ignore_invalid_files:
+        args.images[:] = [i for i in args.images if i not in bad_files]
+    else:
+        # type=argparse.filetype('r') would cause a serialization error on
+        # Windows, something about multiprocessing. Easier to drop it and
+        # check for invalid files here.
+        print('--ignore_invalid_files is False: exiting.')
+        exit(1)
 
 if not len(args.images):
     print('No valid images to process.')
     print('Exiting.')
     exit(2)
-else:
+elif len(bad_files):
     print('Bad files ignored.')
 
 # Handles --outdir='.' on Windows cmd.exe as a convenience.
