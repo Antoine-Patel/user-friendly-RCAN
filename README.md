@@ -1,5 +1,3 @@
-[work in progress]
-
 # Contents
 - [Introduction](#introduction)
 - [Results](#results)
