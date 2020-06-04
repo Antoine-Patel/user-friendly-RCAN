@@ -21,7 +21,7 @@ parser.add_argument('--scale', type=int, default=2,
 parser.add_argument('--chop', action='store_true',
                     help='enable memory-efficient forward')
 parser.add_argument('--ignore_invalid_images', action='store_true',
-                    help='Skip invalid images (file not found, unreadable, ...) instead of halting.')
+                    help='Ignore invalid images (file not found, unreadable, ...) instead of halting.')
 parser.add_argument('--outdir', type=str,
                     help='An optional directory where all results (upscaled images) will be written. Use "." to save in the current directory. If --outdir is left empty, the upscaled images are saved next to their originals (with an added suffix)')
 
