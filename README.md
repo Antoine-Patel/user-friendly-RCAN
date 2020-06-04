@@ -122,7 +122,7 @@ python install.py
 
 ```shell
 # Small image, fast even without CUDA. If the end of the installation
-script shows that you have CUDA enabled, remove '--cpu'.
+# script shows that you have CUDA enabled, remove '--cpu'.
 target='./data/LR/LRBI/Set5/x2/bird_LRBI_x2.png'
 result='/tmp/bird_LRBI_x2_RCAN_x2.png'
 
@@ -167,7 +167,7 @@ This code was tested on python 3.6 and 3.7. It should be able to run
 on python 3.4 and python 3.5, but no garantees here.
 
 The provided installation script installs dependencies (pytorch,
-matplotlib etc) into the "python virtual environment". If you are
+matplotlib etc) into a "python virtual environment". If you are
 unfamiliar with this concept, you can think of it has a self-contained
 local installation; the opposite of a global, system-wide
 installation. This allows multiple version of the same packages (eg.
@@ -181,7 +181,7 @@ process, because:
 - I don't have access to a computer with a NVIDIA graphic card.
 - From my understanding, in order to download cuDNN, you must register
   for the NVIDIA Developer Program, wich would be quite hard to
-  script.
+  script / impossible ?
 - Managing multiple CUDA versions on the same computer, if the need
   arises, sounds like a pain.
 
@@ -197,19 +197,19 @@ moving on to the installation of CUDA + cuDNN.
 ## Absolute VS relative paths
 
 Let's say you downloaded and extracted (or cloned) this repository to
-C:/Users/me/sr/user-friendly-RCAN on your system. Then you can invoke
+C:/Users/me/Documents/user-friendly-RCAN on your system. Then you can invoke
 RCAN by specifying the full absolute path to "run.py", which will work
 not matter the working directory:
 
 ```shell
-python C:/Users/me/sr/user-friendly-RCAN/run.py --help
+python C:/Users/me/Documents/user-friendly-RCAN/run.py --help
 ```
 
 Alternatively, you can change the working directory to the repository
 root, and use a relative path:
 
 ```shell
-cd C:/Users/me/sr/user-friendly-RCAN
+cd C:/Users/me/Documents/user-friendly-RCAN
 python run.py --help
 ```
 
@@ -254,8 +254,8 @@ python run.py --chop --scale 2 "/home/user/me/pictures/*.jpg" "/home/user/me/pic
 ```
 
 You may want to use the --ignore_invalid_files flag to prevent RCAN
-from stopping as soon as a bad image (not found, unreadable, etc) is
-encountered, especially when using wildcards.
+from stopping as soon as an invalid image is encountered, especially
+when using wildcards.
 
 ### Multiple images (explicit)
 
@@ -279,7 +279,7 @@ python run.py --chop --scale 2 /home/user/me/pictures/bird.png /tmp/baby.png /tm
 ... with --outdir:
 
 ```shell
-# Results: ./tmp/bird-RCAN-x2.png, ./tmp/baby-RCAN-x2.png
+# Results: /tmp/bird-RCAN-x2.png, /tmp/baby-RCAN-x2.png
 python run.py --chop --scale 2 --outdir /tmp /home/user/me/pictures/bird.png ./baby.png
 
 # To use the current directory (working directory):
@@ -312,10 +312,10 @@ You can use a custom pre-trained file for the model, one that you
 created yourself (see
 [here](https://github.com/yulunzhang/RCAN#train)). Not required unless
 you are unhappy with the provided pre-trained files, that can be found
-in ./data/model/RCAN_*.pt.
+in ./data/model/RCAN_*.pt. Use --custom_scale in this case.
 
 ```shell
-python run.py --chop --scale 6  --pre-trained-file /home/user/me/documents/RCAN_scale_by_6.pt /home/user/me/pictures/bird.png
+python run.py --chop --custom_scale 6  --pre_trained_file /home/user/me/documents/RCAN_scale_by_6.pt /home/user/me/pictures/bird.png
 
 ```
 
@@ -325,7 +325,7 @@ than the value of --scale:
 
 ```shell
 # Upscale by 2, but load a model created to upscale by 4.
-python run.py --chop --scale 2  --pre-trained-file ./data/model/RCAN_BIX4.pt /home/user/me/pictures/bird.png
+python run.py --chop --custom_scale 2  --pre_trained_file ./data/model/RCAN_BIX4.pt /home/user/me/pictures/bird.png
 
 ```
 

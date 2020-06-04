@@ -3,7 +3,6 @@ from rcan.utility import get_vbin, rootdir
 from os.path import normpath, isfile
 from os import getcwd, access, R_OK
 
-
 parser = argparse.ArgumentParser(description='RCAN: Image Super-Resolution Using Very Deep Residual Channel Attention Networks (Yulun Zhang, Kunpeng Li, Kai Li, Lichen Wang, Bineng Zhong, Yun Fu)')
 
 parser.add_argument('--debug', action='store_true',
@@ -51,7 +50,9 @@ parser.add_argument('--n_colors', type=int, default=3,
 
 # Model specifications
 parser.add_argument('--pre_trained_file', type=str,
-                    help='The full path to a custom pre-trained model. If empty, one of the following model is choosen according to --scale (best match): RCAN_BIX2.pt, RCAN_BIX3.pt, RCAN_BIX4.pt, RCAN_BIX8.pt. If empty and --scale > 8, RCAN_BIX8.pt is used')
+                    help='The full path to a pre-trained model. If empty, one of the following model is choosen according to --scale (best match): RCAN_BIX2.pt, RCAN_BIX3.pt, RCAN_BIX4.pt, RCAN_BIX8.pt.')
+parser.add_argument('--custom_scale', type=int, default=2,
+                    help='super resolution scale / upscaling factor used if a --pre_trained_file is given.')
 parser.add_argument('--n_resblocks', type=int, default=20,
                     help='number of residual blocks')
 parser.add_argument('--n_feats', type=int, default=64,
@@ -89,57 +90,65 @@ parser.add_argument('--weight_decay', type=float, default=0,
 
 args = parser.parse_args()
 
-# Autoload a model in ../data/model according to given --scale if
-# needed.
-if args.pre_trained_file is None:
-    args.pre_trained_file = normpath(
-        f'{rootdir}/data/model/RCAN_BIX{args.scale}.pt')
+def check_args(args):
+    # Autoload a model in ../data/model according to given --scale if
+    # needed.
+    if args.pre_trained_file is None:
+        args.pre_trained_file = normpath(
+            f'{rootdir}/data/model/RCAN_BIX{args.scale}.pt')
+        if args.custom_scale:
+            print('Warning: ignoring --custom_scale.')
+            print(f'using default --scale: {args.scale}')
+    else:
+        args.scale = args.custom_scale if args.custom_scale else args.scale
 
-# Seems like the original code allowed to upscale by multiple factors
-# in one invocation, but... the same pre-trained file would be used.
-# Also doesn't play nice with the "autoload best matching pre-trained
-# file for the --scale" that I added. Not sure if multiple scales for
-# the same pre-trained file could ever be useful anyway.
-#
-# So I dropped the feature, but args.scale still needs to be a list in
-# order to play nice with the rest of the code.
-args.scale = [args.scale]
+    checkfile_ok = lambda x: isfile(x) and access(x, R_OK)
+    if not checkfile_ok(args.pre_trained_file):
+        print(f'Pre-trained file {args.pre_trained_file} not found/unreadable.')
+        print('Cannot process images, exiting.')
+        exit(3)
+
+    bad_files = [i for i in args.images if not checkfile_ok(i)]
+    if len(bad_files):
+        print('Some files were not found or unreadable:')
+        for i in bad_files:
+            print(i)
+        print('')
+
+        if args.ignore_invalid_files:
+            args.images[:] = [i for i in args.images if i not in bad_files]
+        else:
+            # type=argparse.filetype('r') would cause a serialization error on
+            # Windows, something about multiprocessing. Easier to drop it and
+            # check for invalid files here.
+            print('--ignore_invalid_files is False: exiting.')
+            exit(1)
+
+    if not len(args.images):
+        print('No valid images to process.')
+        print('Exiting.')
+        exit(2)
+    elif len(bad_files):
+        print('Bad files ignored.')
+
+    # Seems like the original code allowed to upscale by multiple factors
+    # in one invocation, but... the same pre-trained file would be used.
+    # Also doesn't play nice with the "autoload best matching pre-trained
+    # file for the --scale" that I added. Not sure if multiple scales for
+    # the same pre-trained file could ever be useful anyway.
+    #
+    # So I dropped the feature, but args.scale still needs to be a list in
+    # order to play nice with the rest of the code.
+    args.scale = [args.scale]
+
+if args.outdir:
+    # Handles --outdir='.' on Windows cmd.exe as a convenience.
+    args.outdir = args.outdir.replace("'", "")
+    if args.outdir == '.':
+        args.outdir = getcwd()
+
 
 args.model = 'RCAN'
-
-checkfile_ok = lambda x: isfile(x) and access(x, R_OK)
-if not checkfile_ok(args.pre_trained_file):
-    print('Pre-trained file {args.pre_trained_file} not found/unreadable.')
-    print('Cannot process images, exiting.')
-    exit(3)
-
-bad_files = [i for i in args.images if not checkfile_ok(i)]
-if len(bad_files):
-    print('Some files were not found or unreadable:')
-    for i in bad_files:
-        print(i)
-    print('')
-
-    if args.ignore_invalid_files:
-        args.images[:] = [i for i in args.images if i not in bad_files]
-    else:
-        # type=argparse.filetype('r') would cause a serialization error on
-        # Windows, something about multiprocessing. Easier to drop it and
-        # check for invalid files here.
-        print('--ignore_invalid_files is False: exiting.')
-        exit(1)
-
-if not len(args.images):
-    print('No valid images to process.')
-    print('Exiting.')
-    exit(2)
-elif len(bad_files):
-    print('Bad files ignored.')
-
-# Handles --outdir='.' on Windows cmd.exe as a convenience.
-args.outdir = args.outdir.replace("'", "")
-if args.outdir == '.':
-    args.outdir = getcwd()
 
 for arg in vars(args):
     if vars(args)[arg] == 'True':

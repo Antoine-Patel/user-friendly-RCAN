@@ -1,10 +1,7 @@
-import os
-import math
-from decimal import Decimal
+from os.path import normpath
 
 import imageio
 import torch
-from torch.autograd import Variable
 from tqdm import tqdm
 
 from rcan.utility import timer, quantize
@@ -28,7 +25,7 @@ class Worker():
 
         flavor = 'RCANplus' if self.args.self_ensemble else 'RCAN'
         filename = f'{ofilename}{sep}{flavor}{sep}x{scale}'
-        fullpath = os.path.normpath(f'{path}/{filename}{ext}')
+        fullpath = normpath(f'{path}/{filename}{ext}')
         normalized = upscaled[0].data.mul(255 / self.args.rgb_range)
         ndarr = normalized.byte().permute(1, 2, 0).cpu().numpy()
         imageio.imsave(fullpath, ndarr)
@@ -39,7 +36,6 @@ class Worker():
     def upscale(self):
         saveds = []
         self.model.eval()
-
         timer_test = timer()
         with torch.no_grad():
             for idx_scale, scale in enumerate(self.scale):
