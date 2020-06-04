@@ -248,9 +248,15 @@ Eg. process all .png and .jpg pictures inside directory
 /home/user/me/pictures/:
 
 ```shell
+# Note: use PowerShell (or something like "git bash") on windows if
+# you want to use wildcards; doesn't work in cmd.exe.
 # Results: /home/user/me/pictures/*-RCAN-x2.{png,jpg,jpeg}
 python run.py --chop --scale 2 "/home/user/me/pictures/*.jpg" "/home/user/me/pictures/*.jpeg" "/home/user/me/pictures/*.png"
 ```
+
+You may want to use the --ignore_invalid_images flag to prevent RCAN
+from stopping as soon as a bad image (not found, unreadable, etc) is
+encountered, especially when using wildcards.
 
 ### Multiple images (explicit)
 
@@ -310,7 +316,7 @@ you are unhappy with the provided pre-trained files, that can be found
 in ./data/model/RCAN_*.pt.
 
 ```shell
-python run.py --chop --scale 6  --pre-trained-file /home/user/me/documents/RCAN_scale_by_6.pt -- /home/user/me/pictures/bird.png
+python run.py --chop --scale 6  --pre-trained-file /home/user/me/documents/RCAN_scale_by_6.pt /home/user/me/pictures/bird.png
 
 ```
 
@@ -320,7 +326,7 @@ than the value of --scale:
 
 ```shell
 # Upscale by 2, but load a model created to upscale by 4.
-python run.py --chop --scale 2  --pre-trained-file ./data/model/RCAN_BIX4.pt -- /home/user/me/pictures/bird.png
+python run.py --chop --scale 2  --pre-trained-file ./data/model/RCAN_BIX4.pt /home/user/me/pictures/bird.png
 
 ```
 
