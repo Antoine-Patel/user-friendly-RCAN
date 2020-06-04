@@ -164,8 +164,8 @@ dependencies. Because this project was updated to work with pytorch
 minor versions, eg. 10.2 too, unsure). Please check the matching cuDNN
 version with the help of your favorite search engine.
 
-This code was tested on python 3.6. It should be able to run on python
-3.4 and python 3.5, but no garantees here.
+This code was tested on python 3.6 and 3.7. It should be able to run
+on python 3.4 and python 3.5, but no garantees here.
 
 The provided installation script installs dependencies (pytorch,
 matplotlib etc) into the "python virtual environment". If you are
