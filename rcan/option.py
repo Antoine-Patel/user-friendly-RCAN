@@ -1,7 +1,7 @@
 import argparse
 from rcan.utility import get_vbin, rootdir
 from os.path import normpath, isfile
-from os import getcwd
+from os import getcwd, access, R_OK
 
 
 parser = argparse.ArgumentParser(description='RCAN: Image Super-Resolution Using Very Deep Residual Channel Attention Networks (Yulun Zhang, Kunpeng Li, Kai Li, Lichen Wang, Bineng Zhong, Yun Fu)')
@@ -20,7 +20,7 @@ parser.add_argument('--scale', type=int, default=2,
                     help='super resolution scale / upscaling factor.')
 parser.add_argument('--chop', action='store_true',
                     help='enable memory-efficient forward')
-parser.add_argument('--ignore_invalid_images', action='store_true',
+parser.add_argument('--ignore_invalid_files', action='store_true',
                     help='Ignore invalid images (file not found, unreadable, ...) instead of halting.')
 parser.add_argument('--outdir', type=str,
                     help='An optional directory where all results (upscaled images) will be written. Use "." to save in the current directory. If --outdir is left empty, the upscaled images are saved next to their originals (with an added suffix)')
@@ -107,25 +107,39 @@ args.scale = [args.scale]
 
 args.model = 'RCAN'
 
-# type=argparse.filetype('r') would cause a serialization error on 
-# Windows, something about multiprocessing. Easier to drop it and 
-# check for invalid files here.
-has_missing = 0
-for f in args.images + [args.pre_trained_file]:
-    if not isfile(f):
-        print(f'File {f} not found / invalid / unreadable.')
-        has_missing += 1
+checkfile_ok = lambda x: isfile(x) and access(x, R_OK)
+if not checkfile_ok(args.pre_trained_file):
+    print('Pre-trained file {args.pre_trained_file} not found/unreadable.')
+    print('Cannot process images, exiting.')
+    exit(3)
 
-has_missing = has_missing > 0
+bad_files = [i for i in args.images if not checkfile_ok(i)]
+print('Some files were not found or unreadable:')
+for i in bad_files:
+    print(i)
+print('')
 
-if not args.ignore_invalid_images and has_missing:
-    print(f'--ignore_invalid_images is False and invalid file(s): exiting.')
+if args.ignore_invalid_files:
+    args.images[:] = [i for i in args.images if i not in bad_files]
+else:
+    # type=argparse.filetype('r') would cause a serialization error on
+    # Windows, something about multiprocessing. Easier to drop it and
+    # check for invalid files here.
+    print('--ignore_invalid_files is False: exiting.')
     exit(1)
 
+if not len(args.images):
+    print('No valid images to process.')
+    print('Exiting.')
+    exit(2)
+else:
+    print('Bad files ignored.')
+
+# Handles --outdir='.' on Windows cmd.exe as a convenience.
 args.outdir = args.outdir.replace("'", "")
 if args.outdir == '.':
     args.outdir = getcwd()
-    
+
 for arg in vars(args):
     if vars(args)[arg] == 'True':
         vars(args)[arg] = True

@@ -43,6 +43,7 @@ The RCAN algorithm itself was not modified. What's provided:
   * Including passing a single or multiple images as positional argument(s)
   (instead of a dataset with specific directory structure and naming
   conventions).
+- Some user friendly (common) errors (eg. image not found).
 - Simplified project structure.
 - Explicit MIT license (see
   [this](https://github.com/yulunzhang/RCAN/issues/92))
@@ -242,7 +243,7 @@ no NVIDIA driver on your system. [...]'.
 python run.py --chop --cpu --scale 2  /home/user/me/pictures/bird.png
 ```
 
-### Multiple images (wildchar)
+### Multiple images (wildcard)
 
 Eg. process all .png and .jpg pictures inside directory
 /home/user/me/pictures/:
@@ -254,7 +255,7 @@ Eg. process all .png and .jpg pictures inside directory
 python run.py --chop --scale 2 "/home/user/me/pictures/*.jpg" "/home/user/me/pictures/*.jpeg" "/home/user/me/pictures/*.png"
 ```
 
-You may want to use the --ignore_invalid_images flag to prevent RCAN
+You may want to use the --ignore_invalid_files flag to prevent RCAN
 from stopping as soon as a bad image (not found, unreadable, etc) is
 encountered, especially when using wildcards.
 
