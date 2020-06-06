@@ -83,8 +83,7 @@ Visual comparison for 4× SR with BI model on Set14 and B100 datasets.
 The best results are highlighted. SRResNet, SRResNet VGG22, SRGAN MSE,
 SR- GAN VGG22, and SRGAN VGG54 are proposed in [CVPR2017SRGAN], ENet E
 and ENet PAT are proposed in [ICCV2017EnhanceNet]. These comparisons
-mainly show the effectiveness of our proposed RCAN against GAN based
-methods.
+mainly show the effectiveness RCAN against GAN based methods.
 
 ## Quantitative Results
 ![PSNR_SSIM_BI](/data/figs/psnr_bi_1.PNG)
@@ -190,7 +189,7 @@ Please note that the quality of the upscaling is not affected at all
 by having CUDA + cuDNN available or not, only speed (runtime). My
 advice would be to first test this code without CUDA and cuDNN,
 confirm the quality of the upscaling meets your needs, before
-moving on to the installation of CUDA + cuDNN.
+moving on to the installation of CUDA + cuDNN if needed.
 
 # Usage
 
