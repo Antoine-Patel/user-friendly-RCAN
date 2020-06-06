@@ -40,7 +40,7 @@ class Worker():
         with torch.no_grad():
             for idx_scale, scale in enumerate(self.scale):
                 self.loader_test.dataset.set_scale(idx_scale)
-                tqdm_test = tqdm(self.loader_test, ncols=80)
+                tqdm_test = tqdm(self.loader_test, ncols=80, ascii=True)
                 for idx_img, (lr, hr, filename, path, ext, _) in enumerate(tqdm_test):
                     filename = filename[0]
                     path = self.args.outdir if self.args.outdir else path[0]

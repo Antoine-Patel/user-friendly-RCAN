@@ -291,20 +291,16 @@ python run.py --chop --scale 2 --outdir "." /home/user/me/pictures/bird.png ./ba
 ### Using a different upscaling factor
 
 ```shell
-# Eg. upscale by a factor 4. Recommanded values: 2, 3, 4, 8.
+# Eg. upscale by a factor 4. Allowed values: 2, 3, 4, 8.
 python run.py --chop --scale 4  --outdir /tmp /home/user/me/pictures/bird.png
 ```
 
-Note: a pre-trained file is automatically choosen according the
+Note: a pre-trained file is automatically choosen according to the
 upscaling factor. Eg. if you choose --scale 4, a pre-trained file,
 resulting from training RCAN to do upscaling by a factor of 4, is
-loaded. There is however only 4 pre-trained files: one trained to
-upscale by 2, another one to upscale by 3, another by 4, and finally
-by 8. This is why the recommanded values are: 2, 3, 4, 8.
-
-If you choose a --scale bigger than 8, it will use the pre-trained
-file resulting from training the model to upscale by 8 (because it's
-the closest match).
+loaded. The four allowed values correspond to the four pre-trained
+files provided. See --pre_trained_file and --custom_scale for more
+flexibility.
 
 ### Custom pre-trained files (advanced)
 
@@ -331,15 +327,17 @@ python run.py --chop --custom_scale 2  --pre_trained_file ./data/model/RCAN_BIX4
 
 ### Example with absolute paths
 
+Git Bash / Bash example:
+
 ```shell
-python ~/workspace/RCAN/run.py --chop --scale 2 --outdir /tmp ~/workspace/RCAN/data/LR/LRBI/Set5/x2/bird_LRBI_x2.png
+python ~/workspace/user-friendly-RCAN/run.py --chop --scale 2 --outdir /tmp ~/workspace/user-friendly-RCAN/data/LR/LRBI/Set5/x2/bird_LRBI_x2.png
 ```
 
 # RCAN+
 
-Add the '--self-ensemble' flag to enable 'RCAN+', which yields
-slightly better results, but is slower (see
-[Quantitative Results](#quantitative-results)).
+Add the '--self-ensemble' flag to any of the previous examples in 
+order to enable 'RCAN+', which yields slightly better results, but is
+ slower (see [Quantitative Results](#quantitative-results)).
 
 ```shell
 python run.py --self-ensemble --chop --scale 2  /home/user/me/pictures/bird.png
@@ -348,9 +346,9 @@ python run.py --self-ensemble --chop --scale 2  /home/user/me/pictures/bird.png
 # Sample full output
 
 ```shell
-user@user-laptop:~$ python ~/workspace/RCAN/run.py --chop --cpu --scale 2 --outdir /tmp ~/workspace/RCAN/data/LR/LRBI/Set5/x2/b*_x2.png
-Loading model from /media/user/icybox_02/data/documents/workspace/RCAN/data/model/RCAN_BIX2.pt
-100%|█████████████████████████████████████████████| 3/3 [04:22<00:00, 87.44s/it]
+user@user-laptop:~$ python ~/workspace/user-friendly-RCAN/run.py --chop --cpu --scale 2 --outdir /tmp ~/workspace/user-friendly-RCAN/data/LR/LRBI/Set5/x2/b*_x2.png
+Loading model from /media/user/icybox_02/data/documents/workspace/user-friendly-RCAN/data/model/RCAN_BIX2.pt
+100%|#############################################| 3/3 [04:22<00:00, 87.44s/it]
 Saved results:
 /tmp/baby_LRBI_x2_RCAN_x2.png
 /tmp/bird_LRBI_x2_RCAN_x2.png
