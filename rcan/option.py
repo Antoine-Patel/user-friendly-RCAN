@@ -52,7 +52,7 @@ parser.add_argument('--n_colors', type=int, default=3,
 parser.add_argument('--pre_trained_file', type=str,
                     help='The full path to a pre-trained model. If empty, one of the following model is choosen according to --scale (best match): RCAN_BIX2.pt, RCAN_BIX3.pt, RCAN_BIX4.pt, RCAN_BIX8.pt.')
 parser.add_argument('--custom_scale', type=int, default=2,
-                    help='super resolution scale / upscaling factor used if a --pre_trained_file is given.')
+                    help='super resolution scale / upscaling factor used (only) if a --pre_trained_file is given.')
 parser.add_argument('--n_resblocks', type=int, default=20,
                     help='number of residual blocks')
 parser.add_argument('--n_feats', type=int, default=64,
@@ -97,7 +97,7 @@ def check_args(args):
         args.pre_trained_file = normpath(
             f'{rootdir}/data/model/RCAN_BIX{args.scale}.pt')
         if args.custom_scale:
-            print('Warning: ignoring --custom_scale.')
+            print('Warning: ignoring --custom_scale (see --help)')
             print(f'using default --scale: {args.scale}')
     else:
         args.scale = args.custom_scale if args.custom_scale else args.scale
