@@ -384,12 +384,12 @@ python ~/workspace/user-friendly-RCAN/run.py --chop --scale 2 --outdir /tmp ~/wo
 
 # RCAN+
 
-Add the '--self-ensemble' flag to any of the previous examples in 
+Add the '--self_ensemble' flag to any of the previous examples in 
 order to enable 'RCAN+', which yields slightly better results, but is
  slower (see [Quantitative Results](#quantitative-results)).
 
 ```shell
-python run.py --self-ensemble --chop --scale 2  /home/user/me/pictures/bird.png
+python run.py --self_ensemble --chop --scale 2  /home/user/me/pictures/bird.png
 ```
 
 # Sample full output
