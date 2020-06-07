@@ -15,5 +15,4 @@ if __name__ == '__main__':
     # Use the python interpreter inside the virtual environment.
     vpython = get_vbin('python')
     run_script = normpath(f'{rootdir}/_run.py')
-    print(f'Running: {vpython} {run_script} {" ".join(argv)}')
     system(f'{vpython} {run_script} {" ".join(argv)}')
