@@ -51,7 +51,7 @@ parser.add_argument('--n_colors', type=int, default=3,
 # Model specifications
 parser.add_argument('--pre_trained_file', type=str,
                     help='The full path to a pre-trained model. If empty, one of the following model is choosen according to --scale (best match): RCAN_BIX2.pt, RCAN_BIX3.pt, RCAN_BIX4.pt, RCAN_BIX8.pt.')
-parser.add_argument('--custom_scale', type=int, default=2,
+parser.add_argument('--custom_scale', type=int, default=None,
                     help='super resolution scale / upscaling factor used (only) if a --pre_trained_file is given.')
 parser.add_argument('--n_resblocks', type=int, default=20,
                     help='number of residual blocks')
