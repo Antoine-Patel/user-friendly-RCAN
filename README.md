@@ -10,7 +10,7 @@
   * [RCAN](#rcan)
     + [Single image](#single-image)
     + [Without CUDA](#without-cuda)
-    + [Multiple images (wildchar)](#multiple-images-wildchar)
+    + [Multiple images (wildcard)](#multiple-images-wildcard)
     + [Multiple images (explicit)](#multiple-images-explicit)
     + [Multiple images (combining all at once)](#multiple-images-combining-all-at-once)
     + [Changing the output directory...](#changing-the-output-directory)
@@ -109,6 +109,12 @@ cd /home/user/me/workspace # <- use whatever directory you want the source code 
 git clone https://github.com/Antoine-Patel/user-friendly-RCAN.git # Or download ZIP archive from github
 ```
 
+###### Install CUDA 10.0 + cuDNN
+
+Refer to NVIDIA website for guides on installing CUDA on your system.
+Alternatively, skip this step, then use the --cpu option to invoke
+RCAN without CUDA.
+
 ###### Install
 
 ```shell
@@ -116,6 +122,10 @@ cd /home/user/me/workspace/user-friendly-RCAN # For example
 python install.py
 
 ```
+
+Note: if CUDA is detected, it will at some point print
+`Downloading https://download.pytorch.org/whl/cu100/[...]` instead
+of `Downloading https://download.pytorch.org/whl/cpu/[...]`.
 
 ###### Test run on a small provided image
 
@@ -130,15 +140,18 @@ python run.py --chop --cpu --scale 2 --outdir /tmp "$target"
 display "$result" || xviewer "$result" # Or whatever is your image viewer, you get the idea.
 ```
 
-###### Wrap it up
+###### Note
 
-Now you can use it on some of your images. Happy with the results ?
-Then you should consider installing CUDA + cuDNN, to make it faster.
-This code uses pytorch 1.1, which is compatible with CUDA 9 or 10.
-Look up "install cuda and cudnn <your OS>" in you favorite search
-engine.
+If you installed CUDA after running the install.py script, you need to
+uninstall pytorch and torchvision inside the rcan-env/, then rerun the
+install.py script.
+See 
+[Re-installing pytorch with CUDA support](#re-installing-pytorch-with-cuda-support).
 
 # Installation
+
+If you plan on using CUDA, install it first before the command
+below:
 
 ```shell
 # python <absolute>/<path>/<to>/user-friendly-RCAN/install.py
@@ -158,9 +171,8 @@ enough not to:
 
 Python 3.6 or later is recommended. Pip is also needed to install the
 dependencies. Because this project was updated to work with pytorch
-1.1, CUDA 10.0 or CUDA 9.0 are supported (it might work with later
-minor versions, eg. 10.2 too, unsure). Please check the matching cuDNN
-version with the help of your favorite search engine.
+1.1, CUDA 10.0 or CUDA 9.0 are supported. Please check the matching
+cuDNN version with the help of your favorite search engine.
 
 This code was tested on python 3.6 and 3.7. It should be able to run
 on python 3.4 and python 3.5, but no garantees here.
@@ -186,10 +198,48 @@ process, because:
 
 Thus, you should install those two **optional** dependencies yourself.
 Please note that the quality of the upscaling is not affected at all
-by having CUDA + cuDNN available or not, only speed (runtime). My
-advice would be to first test this code without CUDA and cuDNN,
-confirm the quality of the upscaling meets your needs, before
-moving on to the installation of CUDA + cuDNN if needed.
+by having CUDA + cuDNN available or not, only speed (runtime).
+
+If you have run the install.py script before installing CUDA, refer to
+the next section to make RCAN aware of CUDA.
+
+## Re-installing pytorch with CUDA support
+
+###### Activate the virtual environment
+
+`<venv>` below refers to the directory: 
+`<absolute>/<path>/<to>/user-friendly-RCAN/rcan-env`.
+
+| Platform | Shell | Command to activate virtual environment |
+| -------- | ----- | --------------------------------------- |
+| POSIX | bash/zsh | `$ source <venv>/bin/activate` |
+| POSIX | fish | `$ . <venv>/bin/activate.fish` |
+| POSIX | csh/tcsh | `$ source <venv>/bin/activate.csh` |
+| POSIX | PowerShell Core | `<venv>/bin/Activate.ps1` |
+| Windows | cmd.exe | `C:\> <venv>\Scripts\activate.bat` |
+| Windows | PowerShell | `PS C:\> <venv>\Scripts\Activate.ps1` |
+
+'(rcan-env)' should be mentionned in your terminal (before the prompt)
+if the virtual environment was successfully activated.
+
+###### Uninstall pytorch and torchvision
+
+```shell
+python -m pip uninstall torch torchvision
+```
+
+###### Rerun the install script
+
+```shell
+# Will only re-download and re-install torch and torchvision
+python install.py
+```
+
+###### Deactivate the virtual environment
+
+```shell
+deactivate
+```
 
 # Usage
 
