@@ -10,7 +10,10 @@ from rcan.utility import get_vbin, rootdir
 # environment.
 if __name__ == '__main__':
 
+    # Keep/add double quotes around path with space.
+    argv = [f'"{x}"' if ' ' in x else x for x in sys.argv[1:]]
     # Use the python interpreter inside the virtual environment.
     vpython = get_vbin('python')
     run_script = normpath(f'{rootdir}/_run.py')
-    system(f'{vpython} {run_script} {" ".join(sys.argv[1:])}')
+    print(f'Running: {vpython} {run_script} {" ".join(argv)}')
+    system(f'{vpython} {run_script} {" ".join(argv)}')
