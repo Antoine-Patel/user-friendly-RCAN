@@ -22,7 +22,9 @@
 
 # Introduction
 
-See [TL;DR](#tldr) if you are in a hurry.
+See [TL;DR](#tldr) if you are in a hurry. Note: this is more of a
+"one time" thing made for someone else, and I can't keep up with
+upstream changes.
 
 This repository is a fork of
 [the original RCAN repository](https://github.com/yulunzhang/RCAN),
